@@ -30,7 +30,10 @@ pipeline {
 
     stage('Apply') {
       steps {
-        echo "THIS IS APPLY $params.playbook on $params.host!"
+        sh """
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          ansible-playbook -i '$params.host,' $params.playbook
+        """
       }
     }
   }
