@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Check if the web service is running
+      service_facts:
+      
+    - name: Restart the web service if it is stopped
+      service:
+        name: nginx
+        state: started
+      when: ansible_facts.services['nginx'].state != 'running'
+      register: service_restart
+
+    - name: Notify if the web service was restarted
+      debug:
+        msg: "The web service was stopped and has been restarted."
+      when: service_restart.changed
