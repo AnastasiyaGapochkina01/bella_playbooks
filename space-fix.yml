@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Check disk space usage
+      shell: df -h / | awk 'NR==2 {print $5}' | sed 's/%//'
+      register: disk_usage
+
+    - name: Cleanup log files if disk usage exceeds 80%
+      shell: find /var/log -type f -name "*.log" -delete
+      when: disk_usage.stdout|int > 80
+      register: cleanup_logs
+
+    - name: Notify if disk cleanup was performed
+      debug:
+        msg: "Disk usage exceeded 80%. Log files were cleaned up."
+      when: cleanup_logs.changed
