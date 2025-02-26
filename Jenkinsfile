@@ -28,8 +28,8 @@ pipeline {
     }
 
     stage('Apply') {
-      when not {
-        expression { params.dryrun }
+      when {
+        expression { params.dryrun == "false" }
       }
       steps {
         sh """
