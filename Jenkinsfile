@@ -4,10 +4,10 @@ pipeline {
     DIR = "/var/lib/jenkins/ansible"
   }
   parameters {
-    booleanParam(name: "dryrun", defaultValue: true, description: "Тестовый запуск")
-    gitParameter name: 'branch', type: 'PT_BRANCH', sortMode: 'DESCENDING_SMART', selectedValue: 'NONE', quickFilterEnabled: true
-    string(name: "host", defaultValue: "simple.yml", trim: true, description: "Хост для прокатки")
     choice(name: "playbook", choices: ["simple.yml", "prepare.yml", "test.yml"], description: "Плейбук")
+    string(name: "host", defaultValue: "51.250.17.135", trim: true, description: "Хост для прокатки")
+    gitParameter name: 'branch', type: 'PT_BRANCH', sortMode: 'DESCENDING_SMART', selectedValue: 'NONE', quickFilterEnabled: true
+    booleanParam(name: "dryrun", defaultValue: true, description: "Тестовый запуск")
   }
 
   stages {
@@ -22,14 +22,14 @@ pipeline {
       }
       steps {
         sh """
-          ansible-playbook -i '{ params.host },' { params.playbook } --check
+          ansible-playbook -i '$params.host,' $params.playbook --check
         """
       }
     }
 
     stage('Apply') {
       steps {
-        echo "THIS IS APPLY!"
+        echo "THIS IS APPLY $params.playbook on $params.host!"
       }
     }
   }
