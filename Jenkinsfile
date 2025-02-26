@@ -1,3 +1,4 @@
+def checkPassed = true
 pipeline {
   agent any
   environment {
@@ -17,7 +18,7 @@ pipeline {
       }
     }
     
-    boolean checkPassed = true
+    
     stage('DryRun') {
       when {
         expression { params.dryrun }
