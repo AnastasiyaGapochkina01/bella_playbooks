@@ -1,9 +1,6 @@
 def checkPassed = true
 pipeline {
   agent any
-  environment {
-    DIR = "/var/lib/jenkins/ansible"
-  }
   parameters {
     choice(name: "playbook", choices: ["simple.yml", "prepare.yml", "test.yml"], description: "Плейбук")
     string(name: "host", defaultValue: "51.250.17.135", trim: true, description: "Хост для прокатки")
@@ -18,34 +15,28 @@ pipeline {
       }
     }
     
-    
     stage('DryRun') {
       when {
         expression { params.dryrun }
       }
       steps {
-        try{
-          sh """
-            export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i '$params.host,' $params.playbook --check
-          """
-        }catch (Exception e){
-          checkPassed = false
-        }
-        
+        sh """
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          ansible-playbook -i '$params.host,' $params.playbook --check
+        """
       }
     }
 
     stage('Apply') {
-      if (checkPassed) {
-        steps {
-          sh """
-            export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i '$params.host,' $params.playbook
-          """
-        }
+      when not {
+        expression { params.dryrun }
+      }
+      steps {
+        sh """
+          export ANSIBLE_HOST_KEY_CHECKING=False
+          ansible-playbook -i '$params.host,' $params.playbook
+        """
       }
     }
   }
-
 }
