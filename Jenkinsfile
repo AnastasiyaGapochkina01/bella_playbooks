@@ -16,24 +16,33 @@ pipeline {
         checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins_ssh_key', url: "$git_url"]]])
       }
     }
+    
+    boolean checkPassed = true
     stage('DryRun') {
       when {
         expression { params.dryrun }
       }
       steps {
-        sh """
-          export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i '$params.host,' $params.playbook --check
-        """
+        try{
+          sh """
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook -i '$params.host,' $params.playbook --check
+          """
+        }catch (Exception e){
+          checkPassed = false
+        }
+        
       }
     }
 
     stage('Apply') {
-      steps {
-        sh """
-          export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i '$params.host,' $params.playbook
-        """
+      if (checkPassed) {
+        steps {
+          sh """
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook -i '$params.host,' $params.playbook
+          """
+        }
       }
     }
   }
