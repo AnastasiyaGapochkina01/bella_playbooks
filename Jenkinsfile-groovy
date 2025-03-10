@@ -9,7 +9,7 @@ def collectFiles(File dir) {
   return fileList
 }
 
-def files = collectFiles(new File("./"))
+def files = collectFiles(new File("bella_playbooks"))
 
 properties(
     [
