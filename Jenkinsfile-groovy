@@ -1,6 +1,14 @@
+properties(
+    [
+        parameters([
+                string(defaultValue: '/data', name: 'Directory'),
+                string(defaultValue: 'dev', name: 'DEPLOY_ENV')
+        ])   
+    ]
+)  
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy on $TARGET"
+    echo "Hello from Scripted pipe with groovy on $DEPLOY_ENV"
   }
 }
