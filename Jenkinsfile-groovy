@@ -1,4 +1,6 @@
 import groovy.json.JsonSlurper
+import java.net.URL
+import java.net.URLConnection
 
 def user = 'AnastasiyaGapochkina01'
 def repo = 'bella_playbookse'
