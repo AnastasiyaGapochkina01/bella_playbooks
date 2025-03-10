@@ -1,5 +1,6 @@
 node {
+  env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy"
+    echo "Hello from Scripted pipe with groovy on $TARGET"
   }
 }
