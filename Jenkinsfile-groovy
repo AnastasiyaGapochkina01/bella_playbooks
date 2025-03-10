@@ -1,0 +1,5 @@
+node {
+  stage('First stage'){
+    echo "Hello from Scripted pipe with groovy"
+  }
+}
