@@ -9,6 +9,7 @@ def collectFiles(File dir) {
   return fileList
 }
 
+checkout scm
 def files = collectFiles(new File("bella_playbooks"))
 
 properties(
