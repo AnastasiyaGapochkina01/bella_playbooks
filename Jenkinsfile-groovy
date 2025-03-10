@@ -1,28 +1,37 @@
-import groovy.io.FileType
+import groovy.json.JsonSlurper
 
-@NonCPS
-def collectFiles(File dir) {
-  def fileList = []
-  dir.eachFileRecurse(FileType.FILES) { file -> 
-    fileList << file
-  }
-  return fileList
+def user = 'AnastasiyaGapochkina01'
+def repo = 'bella_playbookse'
+def branch = 'main'
+def token = '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'
+def url = "https://api.github.com/repos/${user}/${repo}/git/trees/${branch}?recursive=1"
+def headers = ['Authorization': "Bearer ${token}"]
+
+
+def response = new URL(url).openConnection().with {
+    requestMethod = 'GET'
+    requestProperties = headers
+    inputStream.withReader { reader ->
+        def json = new JsonSlurper().parse(reader)
+        json.tree.each { item ->
+            if (item.type == 'blob') {
+                println item.path
+            }
+        }
+    }
 }
-
-checkout scm
-def files = collectFiles(new File("./"))
 
 properties(
     [
         parameters([
-                string(defaultValue: 'dev', name: 'DEPLOY_ENV'),
-                choice(choices: files.join("\n"), name: "service")
+                string(defaultValue: 'dev', name: 'DEPLOY_ENV')
+                //choice(choices: files.join("\n"), name: "service")
         ])   
     ]
 )  
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} ${params.service}"
+    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV}"
   }
 }
