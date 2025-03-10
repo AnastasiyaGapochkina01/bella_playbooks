@@ -10,7 +10,7 @@ def collectFiles(File dir) {
 }
 
 checkout scm
-def files = collectFiles(new File("bella_playbooks"))
+def files = collectFiles(new File("./"))
 
 properties(
     [
