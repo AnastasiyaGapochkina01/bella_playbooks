@@ -1,8 +1,35 @@
+import groovy.json.JsonSlurper
+import jenkins.model.*
+
+credentialsId = 'automate-build-images'
+
+def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+    com.cloudbees.plugins.credentials.common.StandardUsernameCredentials.class, Jenkins.instance, null, null ).find{
+        it.id == credentialsId}
+
+def git_token = creds.password
+def url = "https://api.github.com/repos/AnastasiyaGapochkina01/images/contents"
+def text = url.toURL().getText(requestProperties: ['Authorization': "token ${git_token}"])
+
+//def http_client = new URL(url).openConnection() as HttpURLConnection
+
+//http_client.setRequestMethod('GET')
+//http_client.connect()
+def get_services = [:]
+get_services = new JsonSlurper().parseText(text)
+
+def names = get_services.name
+names -= 'Jenkinsfile'
+names -= 'service_param_groovy_script'
+names -= '.gitignore'
+return names
+
+
 properties(
     [
         parameters([
-                string(defaultValue: '/data', name: 'Directory'),
                 string(defaultValue: 'dev', name: 'DEPLOY_ENV')
+                //choice(choices: names.join("\n"), name: "service")
         ])   
     ]
 )  
@@ -10,5 +37,6 @@ node {
   env.TARGET = 'prod'
   stage('First stage'){
     echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV}"
+    echo names
   }
 }
