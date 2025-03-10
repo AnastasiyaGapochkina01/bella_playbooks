@@ -1,10 +1,12 @@
 import groovy.io.FileType
 
-def fileList = []
-
-def dir = new File("./")
-dir.eachFileRecurse (FileType.FILES) { file ->
-  fileList << file
+@NonCPS
+def collectFiles(File dir) {
+  def fileList = []
+  dir.eachFileRecurse(FileType.FILES) { file -> 
+    fileList << file
+  }
+  return fileList
 }
 
 
@@ -20,6 +22,7 @@ node {
   env.TARGET = 'prod'
   stage('First stage'){
     echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV}"
-    echo fileList
+    def files = collectFiles(new File("./"))
+    echo "Files: ${files}"
   }
 }
