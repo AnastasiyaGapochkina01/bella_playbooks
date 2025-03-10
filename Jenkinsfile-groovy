@@ -14,7 +14,7 @@ def files = collectFiles(new File("./"))
 properties(
     [
         parameters([
-                string(defaultValue: 'dev', name: 'DEPLOY_ENV')
+                string(defaultValue: 'dev', name: 'DEPLOY_ENV'),
                 choice(choices: files.join("\n"), name: "service")
         ])   
     ]
