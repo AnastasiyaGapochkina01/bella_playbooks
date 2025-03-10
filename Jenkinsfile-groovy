@@ -1,28 +1,10 @@
-import groovy.json.JsonSlurper
-import java.net.URL
-import java.net.URLConnection
-
-def user = 'AnastasiyaGapochkina01'
-def repo = 'bella_playbookse'
-def branch = 'main'
-def token = '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'
-def url = "https://api.github.com/repos/${user}/${repo}/git/trees/${branch}?recursive=1"
-def headers = ['Authorization': "Bearer ${token}"]
-
-
-def response = new URL(url).openConnection().with {
-    requestMethod = 'GET'
-    requestProperties = headers
-    inputStream.withReader { reader ->
-        def json = new JsonSlurper().parse(reader)
-        json.tree.each { item ->
-            if (item.type == 'blob') {
-                println item.path
-            }
-        }
-    }
+def get_files() {
+def fileList = ['/bin/bash', '-c', "git clone --single-branch + " https://github.com/AnastasiyaGapochkina01/bella_playbooks.git > /dev/null 2>&1 ; cd bella_playbooks ; git ls-tree -r origin/main" + " --name-only"].execute()
+fileList.waitFor()
+return fileList.text.readLines()
+""".stripMargin()
 }
-
+def services = get_files()
 properties(
     [
         parameters([
@@ -34,6 +16,6 @@ properties(
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV}"
+    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} services"
   }
 }
