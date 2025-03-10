@@ -1,5 +1,5 @@
 def get_files() {
-def fileList = ['/bin/bash', '-c', "git clone --single-branch --branch " + BRANCH_NAME + " https://git.repository.com/scm/project/repo.git > /dev/null 2>&1 ; cd repo ; git ls-tree -r origin/" + BRANCH_NAME + " --name-only"].execute()
+
 
 def fileList = ['/bin/bash', '-c', "git clone --single-branch https://github.com/AnastasiyaGapochkina01/bella_playbooks.git > /dev/null 2>&1 ; cd bella_playbooks ; git ls-tree -r origin/main  --name-only"].execute()
 fileList.waitFor()
