@@ -9,20 +9,19 @@ def collectFiles(File dir) {
   return fileList
 }
 
+def files = collectFiles(new File("./"))
 
 properties(
     [
         parameters([
                 string(defaultValue: 'dev', name: 'DEPLOY_ENV')
-                //choice(choices: fileList.join("\n"), name: "service")
+                choice(choices: files.join("\n"), name: "service")
         ])   
     ]
 )  
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV}"
-    def files = collectFiles(new File("./"))
-    echo "Files: ${files}"
+    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} ${params.service}"
   }
 }
