@@ -7,7 +7,8 @@ def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredenti
     com.cloudbees.plugins.credentials.common.StandardUsernameCredentials.class, Jenkins.instance, null, null ).find{
         it.id == credentialsId}
 
-def git_token = creds.password
+//def git_token = creds.password
+def git_token = 'automate-build-images'
 def url = "https://api.github.com/repos/AnastasiyaGapochkina01/images/contents"
 def text = url.toURL().getText(requestProperties: ['Authorization': "token ${git_token}"])
 
