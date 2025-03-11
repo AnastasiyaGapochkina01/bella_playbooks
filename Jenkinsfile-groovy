@@ -3,6 +3,19 @@ def cmd = ['/bin/bash', '-c', "git clone --single-branch https://github.com/Anas
 def file_str = cmd.execute().text
 def files = file_str.split('\n').collect { it }
 
+def proceed() {
+    stage('Proceed') {
+        def userInput = input(
+            id: 'userInput', message: 'This is PRODUCTION!', parameters: [
+            [$class: 'BooleanParameterDefinition', defaultValue: false, description: '', name: 'Please confirm you sure to proceed']
+        ])
+        
+        if(!userInput) {
+            error "Build wasn't confirmed"
+        }
+    }
+}
+
 properties(
     [
         parameters([
@@ -12,8 +25,15 @@ properties(
     ]
 )  
 node {
-  env.TARGET = 'prod'
-  stage('First stage'){
-   echo "${params.DEPLOY_ENV} ${params.SERVICE}"
+  stage('Run'){
+   switch("${params.DEPLOY_ENV}") {
+        case "prod":
+            proceed()
+            echo "Run job"
+            break;
+        default:
+            echo "Dev deploy"
+            break;
+    }
   }
 }
