@@ -7,7 +7,7 @@ properties(
     [
         parameters([
                 string(defaultValue: 'dev', name: 'DEPLOY_ENV'),
-                choice(choices: files, name: "SERVICE")
+                choice(choices: files, defaultValue: 'run.yml' name: "SERVICE")
         ])   
     ]
 )  
