@@ -1,19 +1,20 @@
 import groovy.json.JsonSlurper
 def cmd = ['/bin/bash', '-c', "git clone --single-branch https://github.com/AnastasiyaGapochkina01/bella_playbooks.git > /dev/null 2>&1 ; cd bella_playbooks ; git ls-tree -r origin/main  --name-only"]
-def file_str = cmd.execute().text.join("\n")
+def file_str = cmd.execute().text
+//.join("\n")
 def files = new JsonSlurper().parseText(file_str)
 
 properties(
     [
         parameters([
-                string(defaultValue: 'dev', name: 'DEPLOY_ENV'),
-                choice(choices: files, defaultValue: 'run.yml', name: "SERVICE")
+                string(defaultValue: 'dev', name: 'DEPLOY_ENV')
+                //choice(choices: files, defaultValue: 'run.yml', name: "SERVICE")
         ])   
     ]
 )  
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} ${params.SERVICE}"
+    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} files"
   }
 }
