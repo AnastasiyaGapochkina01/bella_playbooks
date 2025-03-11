@@ -5,14 +5,14 @@ def files = cmd.execute().text
 properties(
     [
         parameters([
-                string(defaultValue: 'dev', name: 'DEPLOY_ENV')
-                //choice(choices: files.join("\n"), name: "service")
+                string(defaultValue: 'dev', name: 'DEPLOY_ENV'),
+                choice(choices: files.join("\n"), name: "SERVICE")
         ])   
     ]
 )  
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} ${files}"
+    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} ${params.SERVICE}"
   }
 }
