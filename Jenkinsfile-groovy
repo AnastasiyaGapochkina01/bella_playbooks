@@ -8,13 +8,13 @@ properties(
     [
         parameters([
                 string(defaultValue: 'dev', name: 'DEPLOY_ENV')
-                //choice(choices: files, defaultValue: 'run.yml', name: "SERVICE")
+                //choice(choices: file_str, defaultValue: 'run.yml', name: "SERVICE")
         ])   
     ]
 )  
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-   print(file_str)
+   print(file_str.getClass())
   }
 }
