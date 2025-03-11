@@ -15,6 +15,6 @@ properties(
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-    echo "Hello from Scripted pipe with groovy on ${params.DEPLOY_ENV} $files"
+   print(file_str)
   }
 }
