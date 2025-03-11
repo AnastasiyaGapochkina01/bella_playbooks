@@ -3,6 +3,7 @@ def cmd = ['/bin/bash', '-c', "git clone --single-branch https://github.com/Anas
 def file_str = cmd.execute().text
 def files = file_str.split('\n').collect { it }
 
+def delete = ['/bin/bash', '-c', "rm -rf bella_playbooks"].execute()
 def proceed() {
     stage('Proceed') {
         def userInput = input(
