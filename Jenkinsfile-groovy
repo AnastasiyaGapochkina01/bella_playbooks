@@ -7,14 +7,14 @@ def files = file_str.split('\n').collect { it }
 properties(
     [
         parameters([
-                string(defaultValue: 'dev', name: 'DEPLOY_ENV')
-                //choice(choices: file_str, defaultValue: 'run.yml', name: "SERVICE")
+                string(defaultValue: 'dev', name: 'DEPLOY_ENV'),
+                choice(choices: files, defaultValue: 'run.yml', name: "SERVICE")
         ])   
     ]
 )  
 node {
   env.TARGET = 'prod'
   stage('First stage'){
-   print(files)
+   echo "${params.DEPLOY_ENV} ${params.SERVICE}"
   }
 }
