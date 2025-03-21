@@ -30,6 +30,10 @@ pipeline {
     stage('Apply') {
       when {
         expression { params.dryrun == "false" }
+        
+      }
+      input {
+         message "Should we continue play?"
       }
       steps {
         sh """
