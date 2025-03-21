@@ -1,5 +1,5 @@
 def checkPassed = true
-def cmd = ['/bin/bash', '-c', "git clone --single-branch https://github.com/AnastasiyaGapochkina01/bella_playbooks.git > /dev/null 2>&1 ; cd bella_playbooks ; git ls-tree -r origin/main  --name-only git ls-files -- '*.yml' '*.yaml'"]
+def cmd = ['/bin/bash', '-c', "git clone --single-branch https://github.com/AnastasiyaGapochkina01/bella_playbooks.git > /dev/null 2>&1 ; cd bella_playbooks ; git ls-files -- '*.yml' '*.yaml'"]
 def file_str = cmd.execute().text
 def files = file_str.split('\n').collect { it }
 
